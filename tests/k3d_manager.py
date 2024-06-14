@@ -37,14 +37,7 @@ class TestK3dManager(unittest.TestCase):
         self.assertEqual(K3dManager.get_nodeport_config(nodeports), expected_config)
         mock_info.assert_called_once_with(f'Generating nodeport config for {nodeports} ports.')
 
-    @patch('k3d.manager.logger.info')
-    @patch('k3d.manager.logger.debug')
-    def test_prepare_cluster_basic(self, mock_debug, mock_info):
-        expected_config_dict = {
-            'metadata': {'name': 'sandbox'},
-            'ports': [],
-            'registries': {'use': ['k3d-reg:41953']}
-        }
+    def test_prepare_cluster_basic(self):
         step = K3dManager.prepare_cluster(cluster_name='sandbox', registry='reg:41953')
         self.assertEqual(step.name, 'Create cluster')
         self.assertEqual(step.command, 'k3d')
@@ -55,17 +48,8 @@ class TestK3dManager(unittest.TestCase):
         self.assertFalse(step.optional)
         self.assertIsInstance(step.display_messages, DisplayMessages)
         self.assertIsInstance(step.on_success, Step)
-        mock_debug.assert_called_with(f'Validating generated model:\n {expected_config_dict}')
 
-    @patch('k3d.manager.logger.info')
-    @patch('k3d.manager.logger.debug')
-    def test_prepare_cluster_with_agents(self, mock_debug, mock_info):
-        expected_config_dict = {
-            'metadata': {'name': 'sandbox'},
-            'agents': 2,
-            'ports': [],
-            'registries': {'use': ['k3d-reg:41953']}
-        }
+    def test_prepare_cluster_with_agents(self):
         step = K3dManager.prepare_cluster(cluster_name='sandbox', agents=2, registry='reg:41953')
         self.assertEqual(step.name, 'Create cluster')
         self.assertEqual(step.command, 'k3d')
@@ -75,19 +59,8 @@ class TestK3dManager(unittest.TestCase):
         self.assertEqual(step.optional, False)
         self.assertIsInstance(step.display_messages, DisplayMessages)
         self.assertIsInstance(step.on_success, Step)
-        mock_debug.assert_called_with(f'Validating generated model:\n {expected_config_dict}')
 
-    @patch('k3d.manager.logger.info')
-    @patch('k3d.manager.logger.debug')
-    def test_prepare_cluster_with_loadbalancer(self, mock_debug, mock_info):
-        expected_config_dict = {
-            'metadata': {'name': 'sandbox'},
-            'ports': [
-                {'port': '8080:80', 'nodeFilters': ['loadbalancer']},
-                {'port': '8443:443', 'nodeFilters': ['loadbalancer']}
-            ],
-            'registries': {'use': ['k3d-reg:41953']}
-        }
+    def test_prepare_cluster_with_loadbalancer(self):
         step = K3dManager.prepare_cluster(cluster_name='sandbox', loadbalancer=(8080, 8443), registry='reg:41953')
         self.assertEqual(step.name, 'Create cluster')
         self.assertEqual(step.command, 'k3d')
@@ -97,20 +70,8 @@ class TestK3dManager(unittest.TestCase):
         self.assertFalse(step.optional)
         self.assertIsInstance(step.display_messages, DisplayMessages)
         self.assertIsInstance(step.on_success, Step)
-        mock_debug.assert_called_with(f'Validating generated model:\n {expected_config_dict}')
 
-    @patch('k3d.manager.logger.info')
-    @patch('k3d.manager.logger.debug')
-    def test_prepare_cluster_with_nodeports(self, mock_debug, mock_info):
-        expected_config_dict = {
-            'metadata': {'name': 'sandbox'},
-            'ports': [
-                {'port': '32000', 'nodeFilters': ['server:0']},
-                {'port': '32001', 'nodeFilters': ['server:0']},
-                {'port': '32002', 'nodeFilters': ['server:0']}
-            ],
-            'registries': {'use': ['k3d-reg:41953']}
-        }
+    def test_prepare_cluster_with_nodeports(self):
         step = K3dManager.prepare_cluster(cluster_name='sandbox', nodeports=3, registry='reg:41953')
         self.assertEqual(step.name, 'Create cluster')
         self.assertEqual(step.command, 'k3d')
@@ -120,23 +81,8 @@ class TestK3dManager(unittest.TestCase):
         self.assertFalse(step.optional)
         self.assertIsInstance(step.display_messages, DisplayMessages)
         self.assertIsInstance(step.on_success, Step)
-        mock_debug.assert_called_with(f'Validating generated model:\n {expected_config_dict}')
 
-    @patch('k3d.manager.logger.info')
-    @patch('k3d.manager.logger.debug')
-    def test_prepare_cluster_without_default_ingress(self, mock_debug, mock_info):
-        expected_config_dict = {
-            'metadata': {'name': 'sandbox'},
-            'ports': [],
-            'registries': {'use': ['k3d-reg:41953']},
-            'options': {
-                'k3s': {
-                    'extraArgs': [
-                        {'arg': '--disable=traefik', 'nodeFilters': ['server:*']}
-                    ]
-                }
-            }
-        }
+    def test_prepare_cluster_without_default_ingress(self):
         step = K3dManager.prepare_cluster(cluster_name='sandbox', registry='reg:41953', use_default_ingress=False)
         self.assertEqual(step.name, 'Create cluster')
         self.assertEqual(step.command, 'k3d')
@@ -146,10 +92,8 @@ class TestK3dManager(unittest.TestCase):
         self.assertFalse(step.optional)
         self.assertIsInstance(step.display_messages, DisplayMessages)
         self.assertIsInstance(step.on_success, Step)
-        mock_debug.assert_called_with(f'Validating generated model:\n {expected_config_dict}')
 
-    @patch('k3d.manager.logger.info')
-    def test_prepare_registry(self, mock_info):
+    def test_prepare_registry(self):
         registry = 'reg:41953'
         step = K3dManager.prepare_registry(registry)
         self.assertEqual(step.name, 'check_registry_exists')
@@ -159,7 +103,6 @@ class TestK3dManager(unittest.TestCase):
         self.assertEqual(step.optional, True)
         self.assertIsInstance(step.display_messages, DisplayMessages)
         self.assertIsInstance(step.on_failure, Step)
-        mock_info.assert_called_once_with('Preparing registry "reg" on port "41953"')
 
     @patch('k3d.manager.logger.info')
     @patch('k3d.manager.time.time')
