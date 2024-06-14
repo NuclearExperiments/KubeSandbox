@@ -39,3 +39,4 @@ jobs:
           body_path: "body.md"
           tag_name: ${{ steps.cz.outputs.version }}
           files: dist/*
+          token: ${{ secrets.RELEASE_TOKEN }}
