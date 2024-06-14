@@ -2,15 +2,20 @@ name: Test
 on:
   push:
     branches:
+    - feature/*
+    - fix/*
+    - release/*
+  pull_request:
+    branches:
     - main
-    - release
+    - release/*
     
 jobs:
   test:
     strategy:
       matrix:
         python-version: ["3.10", "3.11", "3.12"]
-    runs-on: ${{ matrix.os }}
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v4
