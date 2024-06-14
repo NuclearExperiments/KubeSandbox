@@ -26,7 +26,7 @@ jobs:
       - name: Install the project dependencies
         run: poetry install --with=dev
       - name: Build the binary
-        run: pyinstaller main.spec
+        run: poetry run pyinstaller main.spec
       - id: cz
         name: Create bump and changelog
         uses: commitizen-tools/commitizen-action@master
