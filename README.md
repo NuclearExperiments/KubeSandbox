@@ -1,3 +1,7 @@
+<p align="center">
+  <img height="200" alt="KubeSandbox" src="images/icon.png">
+</p>
+
 # KubeSandbox
 
 KubeSandbox is an open-source tool designed to simplify the process of creating and managing a Kubernetes cluster on a developer's machine. Leveraging Docker, k3d, kubectl, and Helm, this tool provides an easy and quick way to set up a highly customizable and fully functional Kubernetes cluster for learning, testing, and experimentation.
@@ -25,10 +29,14 @@ These dependencies can be automatically installed by the tool if they are not al
 
 ### Download and Execute
 
-1. Download the binary from the [releases page](#).
-2. Open your terminal.
-3. Execute the binary:
-   ```bash
+1. Go to the [KubeSandbox releases page](https://github.com/NuclearExperiments/KubeSandbox/releases/latest) and download the latest binary.
+2. Open your terminal and change to the directory where you downloaded the file.
+3. Make the binary executable by running:
+   ```shell
+   chmod +x kubesandbox
+   ```
+4. Run the binary with:
+   ```shell
    ./kubesandbox
    ```
 
@@ -61,10 +69,6 @@ We welcome contributions from the community! Here are some ways you can contribu
 ## License
 
 This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for more details.
-
-## Contact
-
-For any questions or support, please reach out to [support@example.com](mailto:support@example.com).
 
 ---
 
