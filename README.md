@@ -1,0 +1,71 @@
+# KubeSandbox
+
+KubeSandbox is an open-source tool designed to simplify the process of creating and managing a Kubernetes cluster on a developer's machine. Leveraging Docker, k3d, kubectl, and Helm, this tool provides an easy and quick way to set up a highly customizable and fully functional Kubernetes cluster for learning, testing, and experimentation.
+
+## Features
+
+- **Single Binary Execution**: Download and execute a single binary file on your terminal to set up your cluster.
+- **Sane Default Configuration**: Ideal for beginners who want to learn Kubernetes or for general usage.
+- **Customizable Clusters**: Build customized clusters with any ingress controller of your choice through an easy-to-use menu.
+- **Cluster Management Tools**: Install powerful tools like Rancher and KubeSphere to explore and learn Kubernetes visually.
+- **Auto Dependency Installation**: Automatically installs any missing dependencies using install scripts (currently supported on Ubuntu).
+- **Rootless Docker Support**: Supports Docker running in rootless mode with options to update necessary permissions.
+- **Future Enhancements**: Plans to include more customization options and auto-installation of common tools.
+
+## Installation
+
+### Prerequisites
+
+- Docker
+- k3d
+- kubectl
+- Helm
+
+These dependencies can be automatically installed by the tool if they are not already present on your system (currently supported on Ubuntu).
+
+### Download and Execute
+
+1. Download the binary from the [releases page](#).
+2. Open your terminal.
+3. Execute the binary:
+   ```bash
+   ./kubesandbox
+   ```
+
+## Usage
+
+Upon execution, the tool provides a menu-driven interface to:
+
+- Create a new Kubernetes cluster with default settings.
+- Customize your cluster with various options, including choosing an ingress controller.
+- Install Rancher or KubeSphere for enhanced cluster management.
+- Update permissions for Docker rootless mode if required.
+
+## Customization Options
+
+KubeSandbox offers extensive customization options to tailor your Kubernetes cluster to your specific needs. These include:
+
+- Selection of ingress controllers.
+- Installation of cluster management tools like Rancher and KubeSphere.
+- Configuration options for Docker rootless mode.
+- Future updates will include auto-installation of common tools and more customization options.
+
+## Contribution
+
+We welcome contributions from the community! Here are some ways you can contribute:
+
+- Report bugs and request features by opening issues.
+- Contribute code by forking the repository and submitting pull requests.
+- Help improve the documentation.
+
+## License
+
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for more details.
+
+## Contact
+
+For any questions or support, please reach out to [support@example.com](mailto:support@example.com).
+
+---
+
+Thank you for using KubeSandbox! We hope it helps you learn, test, and experiment with Kubernetes easily and effectively.

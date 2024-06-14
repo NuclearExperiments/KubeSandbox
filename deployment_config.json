@@ -1,0 +1,144 @@
+{
+  "builds": {
+    "default_build": {
+      "agents": "0",
+      "registry": true,
+      "loadbalancer": "Direct mapping (maps port 80:80 and 443:443 to allow URLs like 'http://rancher.localhost' but requires root access)",
+      "nodeports": "0",
+      "ingress": "Nginx",
+      "management": "None"
+    }
+  },
+  "helm": {
+    "ingressControllers": {
+      "Nginx": {
+        "release_name": "nginx-ingress",
+        "chart": "ingress-nginx",
+        "namespace": "ingress-nginx",
+        "repository_url": "https://kubernetes.github.io/ingress-nginx",
+        "wait": true,
+        "values": {
+          "controller": {
+            "ingressClassResource": {
+              "default": true
+            }
+          }
+        }
+      },
+      "APISIX": {
+        "release_name": "apisix",
+        "chart": "oci://registry-1.docker.io/bitnamicharts/apisix",
+        "namespace": "apisix-ingress",
+        "values": {
+          "ingressController": {
+            "enabled": true
+          },
+          "dashboard": {
+            "ingress": {
+              "enabled": true,
+              "hostname": "apisix.localhost"
+            },
+            "service": {
+              "type": "ClusterIP"
+            }
+          },
+          "etcd": {
+            "replicaCount": 1
+          }
+        },
+        "resources": [
+          {
+            "name": "APISIX Dashboard",
+            "path": "http://apisix.localhost",
+            "type": "URL",
+            "details": "URL to access APISIX Dashboard",
+            "reference": "https://apisix.apache.org/docs/dashboard/USER_GUIDE/"
+          }
+        ]
+      },
+      "Kong": {
+        "release_name": "kong-ingress",
+        "repository_url": "https://charts.konghq.com",
+        "chart": "ingress",
+        "namespace": "kong-ingress",
+        "values": {
+          "controller": {
+            "ingressController": {
+              "ingressClassAnnotations": {
+                "ingressclass\\.kubernetes\\.io/is-default-class": "true"
+              }
+            }
+          }
+        }
+      }
+    },
+    "clusterManagers": {
+      "Rancher": {
+        "release_name": "rancher",
+        "chart": "rancher",
+        "repository_url": "https://releases.rancher.com/server-charts/stable",
+        "wait": true,
+        "timeout": "30m",
+        "namespace": "cattle-system",
+        "values": {
+          "hostname": "rancher.localhost",
+          "replicas": 1,
+          "tls": "external"
+        },
+        "display_messages": {
+          "description": "## Rancher\nRancher is an open-source container management platform designed to simplify Kubernetes operations. It is designed to be deployed in production clusters to provide additional features over Kubernetes but its easy to use UI could be used to explore and learn about Kubernetes ecosystem. KubeSandbox will deploy Rancher to the cluster using a Helm chart. The services will be created but it can take some time for them to start running. You can check if the service is up by running the following on the terminal:\n```shell\nkubectl get pods -n cattle-system\n```\n### Links\n- [What is Rancher?](https://www.rancher.com/)\n- [Installation Details](https://ranchermanager.docs.rancher.com/getting-started/installation-and-upgrade/install-upgrade-on-a-kubernetes-cluster)\n",
+          "success_instructions": "## Rancher\nRancher is an open-source container management platform designed to simplify Kubernetes operations. It is designed to be deployed in production clusters to provide additional features over Kubernetes but its easy to use UI could be used to explore and learn about Kubernetes ecosystem. KubeSandbox will deploy Rancher to the cluster using a Helm chart. The services will be created but it can take some time for them to start running. You can check if the service is up by running the following on the terminal:\n```shell\nkubectl get pods -n cattle-system\n```\n### Links\n- [What is Rancher?](https://www.rancher.com/)\n- [Installation Details](https://ranchermanager.docs.rancher.com/getting-started/installation-and-upgrade/install-upgrade-on-a-kubernetes-cluster)\n",
+          "failure_instructions": "## Rancher\nRancher failed to install. You can install it manually using the instructions at the following link:\n- [Installation Details](https://ranchermanager.docs.rancher.com/getting-started/installation-and-upgrade/install-upgrade-on-a-kubernetes-cluster)"
+        },
+        "resources": [
+          {
+            "name": "Rancher URL",
+            "path": "http://rancher.localhost",
+            "type": "URL",
+            "details": "URL to access Rancher Dashboard"
+          }
+        ]
+      }
+    }
+  },
+  "kubeyaml": {
+    "clusterManagers": {
+      "KubeSphere": [
+        {
+          "name": "kubesphere",
+          "kind": "installer",
+          "yaml_file": "https://github.com/kubesphere/ks-installer/releases/download/v3.4.1/kubesphere-installer.yaml",
+          "display_messages": {
+            "description": "## KubeSphere\nKubeSphere is an open-source container management platform designed to simplify Kubernetes operations. It is designed to be deployed in production clusters to provide additional features over Kubernetes but its easy to use UI could be used to explore and learn about Kubernetes ecosystem. KubeSandbox will deploy an installer that will automatically install KubeSphere to the cluster. This process can take some time. You can check if the service is up by running the following on the terminal:\n```shell\nkubectl get svc/ks-console -n kubesphere-system\n```\n### Links\n- [What is KubeSphere?](https://kubesphere.io/docs/v3.3/introduction/what-is-kubesphere/)\n- [Installation Details](https://kubesphere.io/docs/v3.3/installing-on-kubernetes/introduction/overview/)\n### Default Credentials\nUsername: `admin`\nPassword: `P@88w0rd`",
+            "success_instructions": "## KubeSphere\nKubeSphere is an open-source container management platform designed to simplify Kubernetes operations. It is designed to be deployed in production clusters to provide additional features over Kubernetes but its easy to use UI could be used to explore and learn about Kubernetes ecosystem. KubeSandbox will deploy an installer that will automatically install KubeSphere to the cluster. This process can take some time. You can check if the service is up by running the following on the terminal:\n```shell\nkubectl get svc/ks-console -n kubesphere-system\n```\n### Links\n- [What is KubeSphere?](https://kubesphere.io/docs/v3.3/introduction/what-is-kubesphere/)\n- [Installation Details](https://kubesphere.io/docs/v3.3/installing-on-kubernetes/introduction/overview/)\n### Default Credentials\n#### Username: `admin`\n#### Password: `P@88w0rd`",
+            "failure_instructions": "## KubeSphere\nKubeSphere failed to install. You can install it manually using the instructions at the following link:\n- [Installation Details](https://kubesphere.io/docs/v3.3/installing-on-kubernetes/introduction/overview/)"
+          }
+        },
+        {
+          "name": "kubesphere",
+          "kind": "cluster-configuration",
+          "yaml_file": "https://github.com/kubesphere/ks-installer/releases/download/v3.4.1/cluster-configuration.yaml",
+          "display_messages": {
+            "description": "## KubeSphere\nKubeSphere is an open-source container management platform designed to simplify Kubernetes operations. It is designed to be deployed in production clusters to provide additional features over Kubernetes but its easy to use UI could be used to explore and learn about Kubernetes ecosystem. KubeSandbox will deploy an installer that will automatically install KubeSphere to the cluster. This process can take some time. You can check if the service is up by running the following on the terminal:\n```shell\nkubectl get svc/ks-console -n kubesphere-system\n```\n### Links\n- [What is KubeSphere?](https://kubesphere.io/docs/v3.3/introduction/what-is-kubesphere/)\n- [Installation Details](https://kubesphere.io/docs/v3.3/installing-on-kubernetes/introduction/overview/)\n### Default Credentials\nUsername: `admin`\nPassword: `P@88w0rd`"
+          }
+        },
+        {
+          "name": "kubesphere",
+          "kind": "Ingress",
+          "yaml_content": "apiVersion: networking.k8s.io/v1\nkind: Ingress\nmetadata:\n  name: kubesphere\n  namespace: kubesphere-system\nspec:\n  \n  rules:\n  - host: \"kubesphere.localhost\"\n    http:\n      paths:\n      - pathType: Prefix\n        path: \"/\"\n        backend:\n          service:\n            name: ks-console\n            port:\n              number: 80\n",
+          "display_messages": {
+            "description": "## KubeSphere\nKubeSphere is an open-source container management platform designed to simplify Kubernetes operations. It is designed to be deployed in production clusters to provide additional features over Kubernetes but its easy to use UI could be used to explore and learn about Kubernetes ecosystem. KubeSandbox will deploy an installer that will automatically install KubeSphere to the cluster. This process can take some time. You can check if the service is up by running the following on the terminal:\n```shell\nkubectl get svc/ks-console -n kubesphere-system\n```\n### Links\n- [What is KubeSphere?](https://kubesphere.io/docs/v3.3/introduction/what-is-kubesphere/)\n- [Installation Details](https://kubesphere.io/docs/v3.3/installing-on-kubernetes/introduction/overview/)\n### Default Credentials\nUsername: `admin`\nPassword: `P@88w0rd`"
+          },
+          "resources": [
+            {
+              "name": "Kubesphere URL",
+              "path": "http://kubesphere.localhost",
+              "type": "URL",
+              "details": "URL to access KubeSphere Dashboard"
+            }
+          ]
+        }
+      ]
+    }
+  }
+}
