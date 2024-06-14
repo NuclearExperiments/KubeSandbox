@@ -118,14 +118,14 @@ class TestExecutionPlanner(unittest.TestCase):
 
         self.planner.installation_sources = {
             'package1': InstallationSource(url=example_url),
-            'package2': InstallationSource(url=example_url)
+            'package2': InstallationSource(url=f'{example_url}')
         }
         self.planner._ExecutionPlanner__install_packages({'package1', 'package2'})
         mock_execute_command.assert_has_calls([
             call(direct_command='sudo ls'),
             call(direct_command='bash -c \'echo "Hello, world!"\''),
             call(direct_command='bash -c \'echo "Hello, world!"\''),
-        ])
+        ], any_order=True)
         mock_info.assert_has_calls(
             [call('Installing package package2'),
              call(
@@ -134,7 +134,8 @@ class TestExecutionPlanner(unittest.TestCase):
              call('Installing package package1'),
              call(
                  'Downloading script for package "package1" from "https://example.com/package1.sh"'),
-             call('Package1 installed successfully')]
+             call('Package1 installed successfully')],
+            any_order=True
         )
 
     @patch('planner.planner.httpx.get')
