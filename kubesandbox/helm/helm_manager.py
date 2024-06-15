@@ -5,8 +5,8 @@ from typing import Any
 
 from rich.pretty import pretty_repr
 
-from helm.model import HelmChart
-from planner.support import Step, DisplayMessages
+from kubesandbox.helm.model import HelmChart
+from kubesandbox.planner.support import Step, DisplayMessages
 
 logger = logging.getLogger('App.HelmManager')
 

@@ -4,13 +4,14 @@ from pathlib import Path
 from rich import print
 from rich.markdown import Markdown
 
-from storage import Resource, RuntimeData
+from kubesandbox.storage import Resource, RuntimeData
 
 
 class Chores:
     """
     A class to handle pre-execution and post-execution chores like generating reports and cleaning up temporary files.
     """
+
     def __init__(self, workdir: str, dump_output: bool, generate_report: bool, storage: RuntimeData):
         """
         Initializes the Chores object.

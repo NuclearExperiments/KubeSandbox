@@ -9,10 +9,10 @@ from typing import Any
 
 import yaml
 
-import config
-from k3d.model import ClusterConfig
-from planner.support import Step, DisplayMessages
-from storage import Resource
+from kubesandbox import config
+from kubesandbox.k3d.model import ClusterConfig
+from kubesandbox.planner.support import Step, DisplayMessages
+from kubesandbox.storage import Resource
 
 logger = logging.getLogger('App.K3dManager')
 

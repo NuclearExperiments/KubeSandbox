@@ -1,10 +1,10 @@
 import unittest
 from unittest.mock import patch, MagicMock, call
 
-from exception_classes import InstallationFailedException, UnknownPackageException
-from planner.planner import ExecutionPlanner, InstallationSource
-from planner.support import Step, DisplayMessages
-from shellclient.base_shell import ProcessResult
+from kubesandbox.exception_classes import InstallationFailedException, UnknownPackageException
+from kubesandbox.planner.planner import ExecutionPlanner, InstallationSource
+from kubesandbox.planner.support import Step, DisplayMessages
+from kubesandbox.shellclient.base_shell import ProcessResult
 
 example_url = 'https://example.com/package1.sh'
 
@@ -29,9 +29,9 @@ class TestExecutionPlanner(unittest.TestCase):
         self.planner = ExecutionPlanner(steps=[])
         self.planner._display = get_mock_display()
 
-    @patch('planner.planner.logger.info')
-    @patch('planner.planner.logger.debug')
-    @patch('planner.planner.httpx.get')
+    @patch('kubesandbox.planner.planner.logger.info')
+    @patch('kubesandbox.planner.planner.logger.debug')
+    @patch('kubesandbox.planner.planner.httpx.get')
     def test_download_package_installation_script(self, mock_get, mock_debug, mock_info):
         mock_get.return_value.status_code = 200
         mock_get.return_value.text = '#!/bin/bash\necho "Hello, world!"'
@@ -48,8 +48,8 @@ class TestExecutionPlanner(unittest.TestCase):
             'Headers - {}\nStatus code - 200\nText - #!/bin/bash\necho "Hello, world!"'
         )
 
-    @patch('planner.planner.logger.info')
-    @patch('planner.planner.httpx.get')
+    @patch('kubesandbox.planner.planner.logger.info')
+    @patch('kubesandbox.planner.planner.httpx.get')
     def test_download_package_installation_script_failure(self, mock_get, mock_info):
         mock_get.return_value.status_code = 404
         self.planner.installation_sources = {
@@ -61,17 +61,17 @@ class TestExecutionPlanner(unittest.TestCase):
             'Downloading script for package "package1" from "https://example.com/package1.sh"'
         )
 
-    # @patch('planner.planner.ExecutionPlanner._display')
-    @patch('planner.planner.Shell.execute_command')
-    @patch('planner.planner.logger.info')
+    # @patch('kubesandbox.planner.planner.ExecutionPlanner._display')
+    @patch('kubesandbox.planner.planner.Shell.execute_command')
+    @patch('kubesandbox.planner.planner.logger.info')
     def test_execute_package_installation_script_success(self, mock_info, mock_execute_command):
         mock_execute_command.return_value = ProcessResult(exit_code=0, stdout='', stderr='')
         self.planner._ExecutionPlanner__execute_package_installation_script('package1', 'echo "Hello, world!"')
         mock_execute_command.assert_called_once_with(direct_command='bash -c \'echo "Hello, world!"\'')
         mock_info.assert_called_once_with('Package1 installed successfully')
 
-    @patch('planner.planner.logger.info')
-    @patch('planner.planner.Shell.execute_command')
+    @patch('kubesandbox.planner.planner.logger.info')
+    @patch('kubesandbox.planner.planner.Shell.execute_command')
     def test_execute_package_installation_script_failure(self, mock_execute_command, mock_info):
         mock_execute_command.return_value = ProcessResult(exit_code=1, stdout='', stderr='')
         with self.assertRaises(InstallationFailedException):
@@ -79,11 +79,11 @@ class TestExecutionPlanner(unittest.TestCase):
         mock_execute_command.assert_called_once_with(direct_command='bash -c \'echo "Hello, world!"\'')
         mock_info.assert_called_once_with('Installation failed')
 
-    # @patch('planner.planner.logger.info')
+    # @patch('kubesandbox.planner.planner.logger.info')
     # @patch.object(ExecutionPlanner, '__download_package_installation_script')
     # @patch.object(ExecutionPlanner, '__execute_package_installation_script')
-    # # @patch('planner.planner.ExecutionPlanner.__download_package_installation_script')
-    # # @patch('planner.planner.ExecutionPlanner.__execute_package_installation_script')
+    # # @patch('kubesandbox.planner.planner.ExecutionPlanner.__download_package_installation_script')
+    # # @patch('kubesandbox.planner.planner.ExecutionPlanner.__execute_package_installation_script')
     # def test_install_package_success(self, mock_execute_package_installation_script,
     #                                  mock_download_package_installation_script, mock_info):
     #     mock_download_package_installation_script.return_value = 'echo "Hello, world!"'
@@ -101,14 +101,14 @@ class TestExecutionPlanner(unittest.TestCase):
     #         call('Package1 installed successfully', item_type='success')
     #     ])
 
-    @patch('planner.planner.logger.info')
+    @patch('kubesandbox.planner.planner.logger.info')
     def test_install_package_unknown_package(self, mock_info):
         with self.assertRaises(UnknownPackageException):
             self.planner._ExecutionPlanner__install_package('package1')
 
-    @patch('planner.planner.httpx.get')
-    @patch('planner.planner.Shell.execute_command')
-    @patch('planner.planner.logger.info')
+    @patch('kubesandbox.planner.planner.httpx.get')
+    @patch('kubesandbox.planner.planner.Shell.execute_command')
+    @patch('kubesandbox.planner.planner.logger.info')
     def test_install_packages_success(self, mock_info, mock_execute_command, mock_get):
         mock_get.return_value.status_code = 200
         mock_get.return_value.text = 'echo "Hello, world!"'
@@ -138,9 +138,9 @@ class TestExecutionPlanner(unittest.TestCase):
             any_order=True
         )
 
-    @patch('planner.planner.httpx.get')
-    @patch('planner.planner.Shell.execute_command')
-    @patch('planner.planner.logger.info')
+    @patch('kubesandbox.planner.planner.httpx.get')
+    @patch('kubesandbox.planner.planner.Shell.execute_command')
+    @patch('kubesandbox.planner.planner.logger.info')
     def test_install_packages_failure(self, mock_info, mock_execute_command, mock_get):
         mock_get.return_value.status_code = 200
         mock_get.return_value.text = 'echo "Hello, world!"'
@@ -165,8 +165,8 @@ class TestExecutionPlanner(unittest.TestCase):
             call('Installation failed')
         ])
 
-    @patch('planner.planner.Shell.execute_command')
-    @patch('planner.planner.logger.info')
+    @patch('kubesandbox.planner.planner.Shell.execute_command')
+    @patch('kubesandbox.planner.planner.logger.info')
     def test_install_packages_keyboard_interrupt(self, mock_info, mock_execute_command):
         mock_execute_command.side_effect = [
             ProcessResult(exit_code=0, stdout='', stderr=''),
@@ -190,7 +190,7 @@ class TestExecutionPlanner(unittest.TestCase):
             Step(name='Step 1', dependencies=['command1', 'command2'], display_messages=display_messages, command='ls'),
             Step(name='Step 2', dependencies=['command3'], display_messages=display_messages, command='ls')
         ]
-        with patch('planner.planner.shutil.which') as mock_which:
+        with patch('kubesandbox.planner.planner.shutil.which') as mock_which:
             mock_which.side_effect = [False, True, False]
             missing_dependencies = self.planner._ExecutionPlanner__get_missing_dependencies()
             self.assertEqual(missing_dependencies, {'command1', 'command3'})
@@ -252,7 +252,7 @@ class TestExecutionPlanner(unittest.TestCase):
         mock_get_plan_effort.assert_called_once()
         mock_install_packages.assert_called_once_with({'package1', 'package2'})
 
-    @patch('planner.planner.logger.info')
+    @patch('kubesandbox.planner.planner.logger.info')
     @patch.object(ExecutionPlanner, '_ExecutionPlanner__install_packages')
     @patch.object(ExecutionPlanner, '_ExecutionPlanner__get_plan_effort')
     @patch.object(ExecutionPlanner, '_ExecutionPlanner__get_missing_dependencies')
@@ -279,7 +279,7 @@ class TestExecutionPlanner(unittest.TestCase):
             call('Step succeeded')
         ])
 
-    @patch('planner.planner.Shell.execute_command')
+    @patch('kubesandbox.planner.planner.Shell.execute_command')
     @patch.object(ExecutionPlanner, '_ExecutionPlanner__update_display_for_step_start')
     @patch.object(ExecutionPlanner, '_ExecutionPlanner__on_step_success')
     @patch.object(ExecutionPlanner, '_ExecutionPlanner__on_step_failure')
@@ -293,7 +293,7 @@ class TestExecutionPlanner(unittest.TestCase):
         mock_on_step_success.assert_called_once_with(step)
         mock_on_step_failure.assert_not_called()
 
-    @patch('planner.planner.Shell.execute_command')
+    @patch('kubesandbox.planner.planner.Shell.execute_command')
     @patch.object(ExecutionPlanner, '_ExecutionPlanner__update_display_for_step_start')
     @patch.object(ExecutionPlanner, '_ExecutionPlanner__on_step_success')
     @patch.object(ExecutionPlanner, '_ExecutionPlanner__on_step_failure')

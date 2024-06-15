@@ -9,17 +9,17 @@ from os import system, name
 from pydantic import TypeAdapter
 from rich.pretty import pretty_repr
 
-import config
-from helm.helm_manager import HelmManager
-from helm.model import HelmChart
-from k3d.manager import K3dManager
-from kubeclient.kubectl_manager import KubeManager
-from kubeclient.model import KubeObject
-from navigation import InputMenus
-from planner.planner import ExecutionPlanner
-from planner.support import Step, InstallationSource
-from shellclient.base_shell import Shell
-from utilities.system_patcher import Patcher
+from kubesandbox import config
+from kubesandbox.helm.helm_manager import HelmManager
+from kubesandbox.helm.model import HelmChart
+from kubesandbox.k3d.manager import K3dManager
+from kubesandbox.kubeclient.kubectl_manager import KubeManager
+from kubesandbox.kubeclient.model import KubeObject
+from kubesandbox.navigation import InputMenus
+from kubesandbox.planner.planner import ExecutionPlanner
+from kubesandbox.planner.support import Step, InstallationSource
+from kubesandbox.shellclient.base_shell import Shell
+from kubesandbox.utilities.system_patcher import Patcher
 
 logger = logging.getLogger('App.Main')
 logging.getLogger('App.RichDisplay').setLevel(logging.ERROR)

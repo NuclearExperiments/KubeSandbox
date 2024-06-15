@@ -4,8 +4,8 @@ import os
 import sys
 from pathlib import Path
 
-from chores import Chores
-from storage import RuntimeData
+from kubesandbox.chores import Chores
+from kubesandbox.storage import RuntimeData
 
 banner = r"""
 ▉▉\   ▉▉\          ▉▉\                  ▉▉▉▉▉▉\                            ▉▉\ ▉▉\                           
@@ -122,5 +122,5 @@ installer_config = os.environ.get('INSTALLER_CONFIG', '''
 }
 ''')
 
-with open(resource_path('deployment_config.json'), 'r') as f:
+with open(resource_path('../deployment_config.json'), 'r') as f:
     deployment_config = json.load(f)
