@@ -1,3 +1,9 @@
+## v0.3.1 (2024-06-15)
+
+### Fix
+
+- fixed the path for deployment config
+
 ## v0.3.0 (2024-06-15)
 
 ### Feat
