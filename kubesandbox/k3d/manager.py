@@ -83,7 +83,7 @@ class K3dManager:
         servers_only = ['server:*']
         servers_and_agents = ['server:*', 'agent:*']
 
-        if use_default_ingress:
+        if not use_default_ingress:
             args.append(cls.get_options_arg('--disable=traefik', servers_only))
 
         if config.run_in_user_namespace:
