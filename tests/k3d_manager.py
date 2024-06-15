@@ -1,17 +1,17 @@
 import unittest
 from unittest.mock import patch
 
-import config
-from k3d.manager import K3dManager
-from k3d.model import ClusterConfig
-from planner.support import Step, DisplayMessages
+from kubesandbox import config
+from kubesandbox.k3d.manager import K3dManager
+from kubesandbox.k3d.model import ClusterConfig
+from kubesandbox.planner.support import Step, DisplayMessages
 
 k3d_yaml_regex = r'k3d-config-\d+.yaml'
 
 
 class TestK3dManager(unittest.TestCase):
 
-    @patch('k3d.manager.logger.info')
+    @patch('kubesandbox.k3d.manager.logger.info')
     def test_get_loadbalancer_config_with_loadbalancer(self, mock_info):
         loadbalancer = (8080, 8443)
         expected_config = [
@@ -21,12 +21,12 @@ class TestK3dManager(unittest.TestCase):
         self.assertEqual(K3dManager.get_loadbalancer_config(loadbalancer), expected_config)
         mock_info.assert_called_once_with(f'Generating loadbalancer config for mapping {loadbalancer}')
 
-    @patch('k3d.manager.logger.info')
+    @patch('kubesandbox.k3d.manager.logger.info')
     def test_get_loadbalancer_config_without_loadbalancer(self, mock_info):
         self.assertEqual(K3dManager.get_loadbalancer_config(None), [])
         mock_info.assert_called_once_with('Generating loadbalancer config for mapping None')
 
-    @patch('k3d.manager.logger.info')
+    @patch('kubesandbox.k3d.manager.logger.info')
     def test_get_nodeport_config(self, mock_info):
         nodeports = 3
         expected_config = [
@@ -104,9 +104,9 @@ class TestK3dManager(unittest.TestCase):
         self.assertIsInstance(step.display_messages, DisplayMessages)
         self.assertIsInstance(step.on_failure, Step)
 
-    @patch('k3d.manager.logger.info')
-    @patch('k3d.manager.time.time')
-    @patch('k3d.manager.os.path.join')
+    @patch('kubesandbox.k3d.manager.logger.info')
+    @patch('kubesandbox.k3d.manager.time.time')
+    @patch('kubesandbox.k3d.manager.os.path.join')
     def test_write_cluster_config(self, mock_join, mock_time, mock_info):
         mock_time.return_value = 1678886400
         mock_join.return_value = 'k3d-config-1678886400.yaml'

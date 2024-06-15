@@ -6,13 +6,13 @@ from typing import Literal
 
 import httpx
 
-import config
-from exception_classes import UnknownPackageException, InstallationFailedException, \
+from kubesandbox import config
+from kubesandbox.exception_classes import UnknownPackageException, InstallationFailedException, \
     ExecutionFailureException
-from planner.display import RichDisplay
-from planner.support import Step, InstallationSource
-from shellclient.base_shell import Shell, ProcessResult
-from storage import CommandOutput, ReportNote
+from kubesandbox.planner.display import RichDisplay
+from kubesandbox.planner.support import Step, InstallationSource
+from kubesandbox.shellclient.base_shell import Shell, ProcessResult
+from kubesandbox.storage import CommandOutput, ReportNote
 
 logger = logging.getLogger('App.Planner')
 

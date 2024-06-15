@@ -2,8 +2,8 @@ from typing import Optional, Self
 
 from pydantic import BaseModel, model_validator
 
-from exception_classes import NoCommandSpecifiedException
-from storage import Resource
+from kubesandbox.exception_classes import NoCommandSpecifiedException
+from kubesandbox.storage import Resource
 
 
 class DisplayMessages(BaseModel):

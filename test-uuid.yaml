@@ -1,0 +1,5 @@
+---
+kind: Deployment
+metadata:
+  name: my-resource
+---

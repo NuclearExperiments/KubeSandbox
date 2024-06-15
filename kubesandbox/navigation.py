@@ -3,7 +3,7 @@ from typing import Any
 import questionary
 from questionary import Separator, Choice, Style
 
-import config
+from kubesandbox import config
 
 custom_style_fancy = Style([
     ('qmark', 'fg:#673ab7'),  # token in front of the question
