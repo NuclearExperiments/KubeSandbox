@@ -5,7 +5,7 @@ a = Analysis(
     ['kubesandbox/__main__.py'],
     pathex=[],
     binaries=[],
-    datas=[('deployment_config.json', '.')],
+    datas=[('kubesandbox/deployment_config.json', '.')],
     hiddenimports=[],
     hookspath=[],
     hooksconfig={},
