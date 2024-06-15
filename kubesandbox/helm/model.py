@@ -2,8 +2,8 @@ from typing import Optional
 
 from pydantic import BaseModel
 
-from planner.support import DisplayMessages
-from storage import Resource
+from kubesandbox.planner.support import DisplayMessages
+from kubesandbox.storage import Resource
 
 
 class HelmChart(BaseModel):

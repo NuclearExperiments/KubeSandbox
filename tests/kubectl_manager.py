@@ -1,17 +1,17 @@
 import unittest
 from unittest.mock import patch
 
-import config
-from kubeclient.kubectl_manager import KubeManager
-from kubeclient.model import KubeObject
-from planner.support import Step, DisplayMessages
+from kubesandbox import config
+from kubesandbox.kubeclient.kubectl_manager import KubeManager
+from kubesandbox.kubeclient.model import KubeObject
+from kubesandbox.planner.support import Step, DisplayMessages
 
 
 class TestKubeManager(unittest.TestCase):
 
-    @patch('kubeclient.kubectl_manager.logger.info')
-    @patch('kubeclient.kubectl_manager.logger.debug')
-    @patch('config.workdir', './')
+    @patch('kubesandbox.kubeclient.kubectl_manager.logger.info')
+    @patch('kubesandbox.kubeclient.kubectl_manager.logger.debug')
+    @patch('kubesandbox.config.workdir', './')
     @patch('uuid.uuid4', return_value='test-uuid')
     def test_generate_kubectl_apply_step_single_object(self, *args):
         kube_object = KubeObject(
@@ -28,10 +28,10 @@ class TestKubeManager(unittest.TestCase):
         self.assertEqual(step.optional, True)
         self.assertIsInstance(step.display_messages, DisplayMessages)
 
-    @patch('config.workdir', './')
+    @patch('kubesandbox.config.workdir', './')
     @patch('uuid.uuid4', return_value='test-uuid')
-    @patch('kubeclient.kubectl_manager.logger.info')
-    @patch('kubeclient.kubectl_manager.logger.debug')
+    @patch('kubesandbox.kubeclient.kubectl_manager.logger.info')
+    @patch('kubesandbox.kubeclient.kubectl_manager.logger.debug')
     def test_generate_kubectl_apply_step_multiple_objects(self, *args):
         kube_objects = [
             KubeObject(
@@ -54,7 +54,7 @@ class TestKubeManager(unittest.TestCase):
         self.assertIsInstance(step.display_messages, DisplayMessages)
         self.assertIsInstance(step.on_success, Step)
 
-    @patch('kubeclient.kubectl_manager.logger.info')
+    @patch('kubesandbox.kubeclient.kubectl_manager.logger.info')
     def test_write_content_to_file(self, mock_info):
         kube_object = KubeObject(
             name='my-resource',
@@ -65,8 +65,8 @@ class TestKubeManager(unittest.TestCase):
         self.assertTrue(filename.startswith(config.workdir))
         self.assertTrue(filename.endswith('.yaml'))
 
-    @patch('kubeclient.kubectl_manager.logger.info')
-    @patch('kubeclient.kubectl_manager.logger.debug')
+    @patch('kubesandbox.kubeclient.kubectl_manager.logger.info')
+    @patch('kubesandbox.kubeclient.kubectl_manager.logger.debug')
     def test_kube_object_to_step_apply(self, mock_debug, mock_info):
         kube_object = KubeObject(
             name='my-resource',
@@ -89,8 +89,8 @@ class TestKubeManager(unittest.TestCase):
         self.assertEqual(step.display_messages.success_message, 'Custom success message')
         self.assertEqual(step.display_messages.failure_message, 'Custom failure message')
 
-    @patch('kubeclient.kubectl_manager.logger.info')
-    @patch('kubeclient.kubectl_manager.logger.debug')
+    @patch('kubesandbox.kubeclient.kubectl_manager.logger.info')
+    @patch('kubesandbox.kubeclient.kubectl_manager.logger.debug')
     def test_kube_object_to_step_delete(self, mock_debug, mock_info):
         kube_object = KubeObject(
             name='my-resource',

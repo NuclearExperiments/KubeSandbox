@@ -5,9 +5,9 @@ import os
 import uuid
 from typing import Literal
 
-import config
-from kubeclient.model import KubeObject
-from planner.support import Step, DisplayMessages
+from kubesandbox import config
+from kubesandbox.kubeclient.model import KubeObject
+from kubesandbox.planner.support import Step, DisplayMessages
 
 logger = logging.getLogger("App.KubeManager")
 

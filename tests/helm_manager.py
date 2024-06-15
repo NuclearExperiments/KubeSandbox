@@ -2,8 +2,8 @@ import unittest
 from pprint import pformat
 from unittest.mock import patch
 
-from helm.helm_manager import HelmManager
-from helm.model import HelmChart
+from kubesandbox.helm.helm_manager import HelmManager
+from kubesandbox.helm.model import HelmChart
 
 
 class TestHelmManager(unittest.TestCase):
@@ -33,7 +33,7 @@ class TestHelmManager(unittest.TestCase):
         expected_args = ['install', 'my-release', 'my-chart']
         self.assertEqual(HelmManager.get_install_args(helm_chart), expected_args)
 
-    @patch('helm.helm_manager.logger.info')
+    @patch('kubesandbox.helm.helm_manager.logger.info')
     def test_get_install_args_with_wait(self, mock_info):
         helm_chart = HelmChart(
             chart='my-chart',
@@ -44,7 +44,7 @@ class TestHelmManager(unittest.TestCase):
         self.assertEqual(HelmManager.get_install_args(helm_chart), expected_args)
         mock_info.assert_called_once_with('Will wait for Helm chart "my-chart" to start up.')
 
-    @patch('helm.helm_manager.logger.info')
+    @patch('kubesandbox.helm.helm_manager.logger.info')
     def test_get_install_args_with_timeout(self, mock_info):
         helm_chart = HelmChart(
             chart='my-chart',
@@ -55,7 +55,7 @@ class TestHelmManager(unittest.TestCase):
         self.assertEqual(HelmManager.get_install_args(helm_chart), expected_args)
         mock_info.assert_called_once_with('Helm chart installation timeout set to my-chart')
 
-    @patch('helm.helm_manager.logger.info')
+    @patch('kubesandbox.helm.helm_manager.logger.info')
     def test_get_install_args_with_repository_url(self, mock_info):
         helm_chart = HelmChart(
             chart='my-chart',
@@ -66,7 +66,7 @@ class TestHelmManager(unittest.TestCase):
         self.assertEqual(HelmManager.get_install_args(helm_chart), expected_args)
         mock_info.assert_called_once_with('Using repository URL "https://example.com/charts"')
 
-    @patch('helm.helm_manager.logger.info')
+    @patch('kubesandbox.helm.helm_manager.logger.info')
     def test_get_install_args_with_namespace(self, mock_info):
         helm_chart = HelmChart(
             chart='my-chart',
@@ -77,7 +77,7 @@ class TestHelmManager(unittest.TestCase):
         self.assertEqual(HelmManager.get_install_args(helm_chart), expected_args)
         mock_info.assert_called_once_with('Using namespace "my-namespace"')
 
-    @patch('helm.helm_manager.logger.info')
+    @patch('kubesandbox.helm.helm_manager.logger.info')
     def test_get_install_args_with_version(self, mock_info):
         helm_chart = HelmChart(
             chart='my-chart',
@@ -88,7 +88,7 @@ class TestHelmManager(unittest.TestCase):
         self.assertEqual(HelmManager.get_install_args(helm_chart), expected_args)
         mock_info.assert_called_once_with('Using version "1.2.3"')
 
-    @patch('helm.helm_manager.logger.debug')
+    @patch('kubesandbox.helm.helm_manager.logger.debug')
     def test_get_install_args_with_values(self, mock_debug):
         helm_chart = HelmChart(
             chart='my-chart',
@@ -100,7 +100,7 @@ class TestHelmManager(unittest.TestCase):
         mock_debug.assert_called_once_with(
             'Using values:\n {}'.format(pformat({'key1': 'value1', 'key2': {'key2_1': 'value2_1'}})))
 
-    @patch('helm.helm_manager.logger.info')
+    @patch('kubesandbox.helm.helm_manager.logger.info')
     def test_generate_chart_installation_step(self, mock_info):
         helm_chart = HelmChart(
             chart='my-chart',
@@ -115,7 +115,7 @@ class TestHelmManager(unittest.TestCase):
         mock_info.assert_called_once_with(
             'Generating step to install Helm chart "my-chart" with release name "my-release"')
 
-    @patch('helm.helm_manager.logger.info')
+    @patch('kubesandbox.helm.helm_manager.logger.info')
     def test_install_chart(self, mock_info):
         helm_chart = HelmChart(
             chart='my-chart',

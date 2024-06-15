@@ -2,8 +2,8 @@ from typing import Optional, Self
 
 from pydantic import BaseModel, model_validator
 
-from planner.support import DisplayMessages
-from storage import Resource
+from kubesandbox.planner.support import DisplayMessages
+from kubesandbox.storage import Resource
 
 
 class KubeObject(BaseModel):
