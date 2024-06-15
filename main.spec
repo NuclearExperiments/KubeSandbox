@@ -2,7 +2,7 @@
 
 
 a = Analysis(
-    ['main.py'],
+    ['kubesandbox/__main__.py'],
     pathex=[],
     binaries=[],
     datas=[('deployment_config.json', '.')],
