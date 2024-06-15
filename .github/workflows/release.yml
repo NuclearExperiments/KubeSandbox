@@ -5,10 +5,12 @@ on:
       - main
 
 jobs:
-  test:
+  release:
     runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       - uses: actions/setup-python@v4
         with:
           python-version: 3.12
@@ -24,7 +26,7 @@ jobs:
           path: ./.venv
           key: venv-${{ hashFiles('poetry.lock') }}
       - name: Install the project dependencies
-        run: poetry install --with=dev
+        run: poetry install
       - name: Build the binary
         run: poetry run pyinstaller main.spec
       - id: cz
@@ -37,6 +39,6 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           body_path: "body.md"
-          tag_name: ${{ steps.cz.outputs.version }}
+          tag_name: v${{ env.REVISION }}
           files: dist/*
-          token: ${{ secrets.RELEASE_TOKEN }}
+          token: ${{ secrets.GITHUB_TOKEN }}
