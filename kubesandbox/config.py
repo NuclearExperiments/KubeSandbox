@@ -122,5 +122,5 @@ installer_config = os.environ.get('INSTALLER_CONFIG', '''
 }
 ''')
 
-with open(resource_path('../deployment_config.json'), 'r') as f:
+with open(resource_path('deployment_config.json'), 'r') as f:
     deployment_config = json.load(f)
