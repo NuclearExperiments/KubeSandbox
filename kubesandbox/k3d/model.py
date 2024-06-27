@@ -185,7 +185,7 @@ class ClusterConfig(BaseModel):
     apiVersion: Literal['k3d.io/v1alpha4'] | None = 'k3d.io/v1alpha4'
     kind: Literal['Simple'] | None = 'Simple'
     metadata: Metadata | None = Metadata(name='sandbox')
-    servers: Annotated[int, Field(strict=True, gt=1)] | None = 1
+    servers: Annotated[int, Field(strict=True, ge=1)] | None = 1
     agents: Annotated[int, Field(strict=True, gt=0)] | None = 0
     kubeAPI: KubeAPI | None = None
     image: str | None = Field(None, examples=['rancher/k3s:latest'])
