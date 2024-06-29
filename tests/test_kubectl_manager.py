@@ -26,8 +26,10 @@ def setup_workdir():
 
 
 @pytest.mark.parametrize("action, expected_args", [
-    ('apply', ['apply', '-f', '/tmp/kubesandbox/12345678-1234-5678-1234-567812345678.yaml']),
-    ('delete', ['delete', '-f', '/tmp/kubesandbox/12345678-1234-5678-1234-567812345678.yaml']),
+    ('apply',
+     ['apply', '-f', '/tmp/kubesandbox/12345678-1234-5678-1234-567812345678.yaml', '--namespace', 'test-namespace']),
+    ('delete',
+     ['delete', '-f', '/tmp/kubesandbox/12345678-1234-5678-1234-567812345678.yaml', '--namespace', 'test-namespace']),
 ])
 @patch('uuid.uuid4', return_value=uuid.UUID('12345678-1234-5678-1234-567812345678'))
 def test_kube_object_to_step(mock_uuid, action, expected_args, setup_workdir):
@@ -49,7 +51,7 @@ def test_kube_object_to_step(mock_uuid, action, expected_args, setup_workdir):
         dependencies=['kubectl'],
         optional=True,
         command='kubectl',
-        args=expected_args + ['--namespace', 'test-namespace'],
+        args=expected_args,
         display_messages=DisplayMessages(
             ongoing_message='Custom ongoing message',
             success_message='Custom success message',
