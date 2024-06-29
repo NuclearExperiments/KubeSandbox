@@ -71,6 +71,7 @@ class Step(BaseModel):
         return self
 
 
+# TODO support for direct install command and requires_root flag
 class InstallationSource(BaseModel):
     """
     Represents the source for installing a package.
