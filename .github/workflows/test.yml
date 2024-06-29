@@ -32,4 +32,4 @@ jobs:
       - name: Install the project dependencies
         run: poetry install
       - name: Run the automated tests
-        run: poetry run python -m unittest discover -s tests/ -p '*.py'
+        run: poetry run pytest
