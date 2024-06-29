@@ -1,3 +1,23 @@
+## v0.4.0 (2024-06-29)
+
+### Feat
+
+- added new execution planner tests
+- added new kubectl_manager tests
+- added pytests for kubectl manager
+- converted k3d tests to pytests
+- converted helm_manager tests to pytest
+
+### Fix
+
+- fixed test workflow
+- updated order of display messages
+- fixed validation for number of servers in the model
+
+### Refactor
+
+- removed old tests
+
 ## v0.3.1 (2024-06-15)
 
 ### Fix
