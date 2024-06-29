@@ -111,9 +111,9 @@ class ExecutionPlanner:
         self._display.add_item_to_logs(f'Downloading installation script for package {package}',
                                        item_type='loading')
 
-        self._display.add_item_to_logs(f'Installing {package}', item_type='loading')
-
         installation_script = self.__download_package_installation_script(package)
+
+        self._display.add_item_to_logs(f'Installing {package}', item_type='loading')
 
         self.__execute_package_installation_script(package, installation_script)
 
