@@ -5,13 +5,13 @@
       "registry": true,
       "loadbalancer": "Direct mapping (maps port 80:80 and 443:443 to allow URLs like 'http://rancher.localhost' but requires root access)",
       "nodeports": "0",
-      "ingress": "Nginx",
+      "ingress": "nginx",
       "management": "None"
     }
   },
   "helm": {
     "ingressControllers": {
-      "Nginx": {
+      "nginx": {
         "release_name": "nginx-ingress",
         "chart": "ingress-nginx",
         "namespace": "ingress-nginx",
@@ -25,7 +25,7 @@
           }
         }
       },
-      "APISIX": {
+      "apisix": {
         "release_name": "apisix",
         "chart": "oci://registry-1.docker.io/bitnamicharts/apisix",
         "namespace": "apisix-ingress",
@@ -56,7 +56,7 @@
           }
         ]
       },
-      "Kong": {
+      "kong": {
         "release_name": "kong-ingress",
         "repository_url": "https://charts.konghq.com",
         "chart": "ingress",
@@ -73,7 +73,7 @@
       }
     },
     "clusterManagers": {
-      "Rancher": {
+      "rancher": {
         "release_name": "rancher",
         "chart": "rancher",
         "repository_url": "https://releases.rancher.com/server-charts/stable",
@@ -103,7 +103,7 @@
   },
   "kubeyaml": {
     "clusterManagers": {
-      "KubeSphere": [
+      "kubeSphere": [
         {
           "name": "kubesphere",
           "kind": "installer",

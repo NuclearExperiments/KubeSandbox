@@ -1,5 +1,3 @@
-from typing import Any
-
 import questionary
 from questionary import Separator, Choice, Style
 
@@ -84,7 +82,8 @@ class InputMenus:
         # Separator(),
         Separator(),
         Choice(title='Easy mode (No management tool) - Build cluster with default configurations', value='build_light'),
-        Choice(title='Easy mode (Rancher) - Build cluster with default configurations and Rancher for management', value='build_heavy'),
+        Choice(title='Easy mode (Rancher) - Build cluster with default configurations and Rancher for management',
+               value='build_heavy'),
         Choice(title='Basic mode - Build cluster and provide basic configurations', value='basic'),
         Choice(title='Build cluster using configuration file', value='recreate',
                disabled='Planned for future release'),
@@ -101,11 +100,32 @@ class InputMenus:
     }
 
     @classmethod
-    def get_build_description(cls) -> dict[str, Any]:
-        return questionary.prompt(cls.basic_build_menu)
+    def get_build_description(cls) -> None:
+        description = questionary.prompt(cls.basic_build_menu)
+        cls.parse_description(description)
 
     @classmethod
     def get_main_menu(cls) -> str:
         return questionary.select(message=f'{config.intro}Select an option to continue:', choices=cls.main_menu,
                                   qmark=' ',
                                   style=custom_style_fancy).ask()
+
+    @classmethod
+    def parse_description(cls, description):
+        inputs = config.storage.inputs
+
+        inputs.agents = int(description['agents'])
+        inputs.nodeports = int(description['nodeports'])
+        inputs.registry = description['registry']
+
+        inputs.ingress = description['ingress'].lower() if description['ingress'] != 'No ingress controller' else None
+
+        if f"{description['loadbalancer']}".startswith('Direct'):
+            inputs.loadbalancer = (80, 443)
+        elif f"{description['loadbalancer']}".startswith('Indirect'):
+            inputs.loadbalancer = (8080, 4433)
+        else:
+            inputs.loadbalancer = None
+
+        inputs.management_tool = description['management'].lower()
+
