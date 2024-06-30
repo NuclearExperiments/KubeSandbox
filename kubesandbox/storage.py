@@ -51,8 +51,19 @@ class ReportNote(BaseModel):
             return f'{self.message}\n\n'
 
 
+class InputParameters(BaseModel):
+    cluster_name: str = 'sandbox'
+    agents: int = 0
+    servers: int = 1
+    registry: bool = True
+    loadbalancer: Optional[tuple[int, int]] = (80, 443)
+    nodeports: int = 0
+    ingress: Optional[str] = 'nginx'
+    management_tool: Optional[str] = None
+
+
 class RuntimeData(BaseModel):
-    inputs: dict[str, str] = {}
+    inputs: InputParameters = InputParameters()
     outputs: list[CommandOutput] = []
     resources: list[Resource] = Field(default_factory=list, description='Generated output files')
     notes: list[ReportNote] = Field(default_factory=list,

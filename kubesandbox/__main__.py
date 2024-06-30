@@ -7,7 +7,6 @@ import traceback
 from os import system, name
 
 from pydantic import TypeAdapter
-from rich.pretty import pretty_repr
 
 from kubesandbox import config
 from kubesandbox.helm.helm_manager import HelmManager
@@ -52,7 +51,7 @@ def get_kubesphere():
     try:
         logger.info('Selected KubeSphere for cluster management.')
         adapter = TypeAdapter(list[KubeObject])
-        ks_chart = adapter.validate_python(config.deployment_config['kubeyaml']['clusterManagers']['KubeSphere'])
+        ks_chart = adapter.validate_python(config.deployment_config['kubeyaml']['clusterManagers']['kubeSphere'])
         return kube_manager.generate_kubectl_apply_step(ks_chart)
     except:
         logger.error(traceback.format_exc())
@@ -61,8 +60,7 @@ def get_kubesphere():
 
 def get_rancher() -> Step | None:
     try:
-        logger.info('Selected Rancher for cluster management.')
-        rancher_chart = HelmChart.model_validate(config.deployment_config['helm']['clusterManagers']['Rancher'])
+        rancher_chart = HelmChart.model_validate(config.deployment_config['helm']['clusterManagers']['rancher'])
         return helm_manager.generate_chart_installation_step(rancher_chart)
     except:
         logger.error(traceback.format_exc())
@@ -70,47 +68,45 @@ def get_rancher() -> Step | None:
 
 
 def prepare_management_tool(tool: str = None) -> Step | None:
-    if tool == 'Rancher':
+    if tool == 'rancher':
+        logger.info('Selected Rancher for cluster management.')
         return get_rancher()
-    elif tool == 'Kubesphere':
+    elif tool == 'kubesphere':
+        logger.info('Selected KubeSphere for cluster management.')
         return get_kubesphere()
     else:
+        logger.info('No cluster management tool selected.')
         return None
 
 
-def process_build_description(build_description: dict):
+def process_build():
+    logger.debug(f'Processing build config {config.storage.inputs.model_dump_json(indent=4)}')
     build_steps: list[Step] = []
+    inputs = config.storage.inputs
 
-    if build_description['registry']:
+    if inputs.registry:
         build_steps.append(
             K3dManager.prepare_registry(registry='reg:41953')
         )
 
-    if f"{build_description['loadbalancer']}".startswith('Direct'):
-        loadbalancer = (80, 443)
-    elif f"{build_description['loadbalancer']}".startswith('Indirect'):
-        loadbalancer = (8080, 4433)
-    else:
-        loadbalancer = None
-
     build_steps.append(
         K3dManager.prepare_cluster(
-            cluster_name='sandbox',
-            agents=int(build_description['agents']),
-            loadbalancer=loadbalancer,
-            nodeports=int(build_description['nodeports']),
-            use_default_ingress=(build_description['ingress'] == 'Traefik')
+            cluster_name=inputs.cluster_name,
+            agents=inputs.agents,
+            loadbalancer=inputs.loadbalancer,
+            nodeports=inputs.nodeports,
+            use_default_ingress=(inputs.ingress == 'traefik')
         )
     )
 
-    if build_description['ingress'] != 'Traefik':
-        ingress_installation = prepare_ingress(build_description['ingress'])
+    if inputs.ingress != 'traefik':
+        ingress_installation = prepare_ingress(inputs.ingress)
 
         if ingress_installation:
             ingress_installation.optional = True
             build_steps.append(ingress_installation)
 
-    management_tool = prepare_management_tool(build_description['management'])
+    management_tool = prepare_management_tool(inputs.management_tool)
 
     if management_tool:
         build_steps.append(management_tool)
@@ -127,17 +123,14 @@ def process_build_description(build_description: dict):
 
 def build_menu():
     logger.info('Getting build description')
-    build_description = InputMenus.get_build_description()
-    logger.debug(pretty_repr(build_description))
-    process_build_description(build_description)
+    InputMenus.get_build_description()
+    process_build()
 
 
 def default_build(management_tool: str = None):
-    build = config.deployment_config['builds']['default_build']
     if management_tool:
-        build['management'] = management_tool
-
-    process_build_description(build)
+        config.storage.inputs.management_tool = management_tool
+    process_build()
 
 
 def main():
@@ -152,7 +145,7 @@ def main():
         elif choice == 'build_light':
             default_build()
         elif choice == 'build_heavy':
-            default_build('Rancher')
+            default_build('rancher')
         elif choice == 'basic':
             build_menu()
         elif choice == 'advanced':
