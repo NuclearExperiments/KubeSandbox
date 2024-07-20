@@ -1,3 +1,9 @@
+## v0.5.0 (2024-07-20)
+
+### Feat
+
+- separated navigation from input configuration
+
 ## v0.4.0 (2024-06-29)
 
 ### Feat
